@@ -1,0 +1,34 @@
+[
+
+    // simpler tts commands:
+    {
+        "caption": "TTS: Speak",
+        "command": "tts_speak",
+        "args": {}
+     },
+    {
+        "caption": "TTS: Pause",
+        "command": "tts_pause",
+        "args": {}
+     },
+    {
+        "caption": "TTS: Resume",
+        "command": "tts_resume",
+        "args": {}
+     },
+    {
+        "caption": "TTS: Skip to next sentence",
+        "command": "tts_skip",
+        "args": {}
+     },
+    {
+        "caption": "TTS: Skip all",
+        "command": "tts_skip_all",
+        "args": {}
+     },
+    {
+        "caption": "TTS: Reinitialize",
+        "command": "tts_reinitialize",
+        "args": {}
+     },
+]

@@ -1,0 +1,26 @@
+
+# TextToSpeech, install message:
+
+Congratulations - TextToSpeech plugin is now installed!
+
+To speak text from within Sublime Text using TextToSpeech:
+
+1. Open a file and select some text.
+2. Press `Ctrl+Shift+P` to bring up the command pallet.
+3. Type **`TTS: Speak`** and select the entry from the list.
+4. You should now hear the selected text being spoken.
+	If no text was selected, the complete file will be used.
+5. You can additionally use
+	* **`TTS: Pause`** to pause the speech synthesis,
+	* **`TTS: Resume`** to resume,
+	* **`TTS: Skip`** to skip to the next sentence, and
+	* **`TTS: Skip **all` to skip all remaining text and stop text-to-speech synthesis.
+6. If something goes wrong and the TTS engine starts misbehaving, you can use
+	`TTS: Reinitialize` to reset the TTS engine.
+
+
+If you would like to review the TextToSpeech usage instructions at a later time,
+just select `Preferences -> Package Settings -> TextToSpeech -> README` from the menu.
+
+The instructions also provide details on how to configure your Sublime Text "key bindings"
+so you can start/pause/resume/skip/stop TTS using keyboard shortcuts.
