@@ -14,7 +14,7 @@ macOS and Linux is not currently supported, but the idea is to support both:
 	Alternatively, we could call `say` from a subprocess
 	(this can also easily be implemented manually using e.g. the build system.
 
-On Linux, the "espeak" speech library (`libespeak.so`) is used for TSS.
+On Linux, the "espeak" speech library (`libespeak.so`) could be used for TSS.
 
 
 
@@ -52,7 +52,25 @@ To speak text from Sublime Text:
 	`TTS: Reinitialize` to reset the TTS engine.
 
 
-## Configuring Sublime Text keyboard shortcuts:
+## Settings:
+
+To adjust your TextToSpeech settings, go to "Preferences" -> "Package Settings"
+-> TextToSpeech -> TextToSpeech Settings. You should then see a split window with two
+tabs. The tab on the left is the default settings; the tab on the right is your 
+user-specified settings. Copy the settings you want to change from the default settings
+on the left to the user-settings on the right. Do not modify the default settings,
+they will be overwritten whenever the plugin is updated!
+
+The currently-available settings are:
+
+* `"debug_print"` (default: false) - set this to `true` to have the plugin write a bunch of debugging output to the console.
+* `"replace_trivial_eol_newline"` (default: true) - 
+* `"tts_rate"`: (default: 0) - increase this to increase the rate/speed of the TTS synthesis.
+* `"tts_volume"`: (default: 100) - decrease this to decrease the TTS volume.
+* `"tts_voice"`: (default: null, meaning use default voice) - the voice to use, e.g. "Microsoft David", or "Microsoft Zira". This depends on which voices you have available on your system!
+
+
+## Configuring Sublime Text TextToSpeech keyboard shortcuts:
 
 It is quite easy to set up Sublime Text so you can control TextToSpeech
 using your keyboard, you just have to configure your "Key Bindings".
@@ -85,9 +103,10 @@ file in the left panel should now look like this:
 ]
 ```
 
-The keymaps defined above requires you to press `ctrl+t`, followed by another keypress
+The keymaps defined above requires you to first press `ctrl+t`,
+and then press `ctrl` plus one of `t`, `p`, `r`, `s`, or `a`.
 
-You can now control TTS playback by pressing **`ctrl+t`,
+This will allow you to control TTS playback by pressing **`ctrl+t`**,
 followed by one of the following key presses
 to start/pause/resume/skip/stop TTS playback:
 
@@ -97,5 +116,5 @@ to start/pause/resume/skip/stop TTS playback:
 * **`ctrl+s`** to skip to the next sentence,
 * **`ctrl+a`** to skip all remaining text and stop text-to-speech synthesis.
 
-You can now start tts by pressing **`ctrl+t` *twice*** rapidly on your keyboard.
+So, in order to start tts, you would just press **`ctrl+t` *twice*** rapidly on your keyboard.
 

@@ -9,13 +9,32 @@ This module contains all TextToSpeech Sublime Text plugin commands.
 import sublime
 import sublime_plugin
 import sys
+import re
 
 if sys.platform == "win32":
     from .simple_tts import tts_win as tts
 else:
-    raise RuntimeError("TextToSpeech currently only supports Windows..")
+    raise RuntimeError("TextToSpeech currently only supports Windows!")
 
+
+SETTINGS_NAME = 'TextToSpeech.sublime-settings'
 DEBUG_PRINT = False
+
+
+def reinitialize_with_settings():
+    settings = sublime.load_settings(SETTINGS_NAME)
+    debug_print = settings.get("debug_print", DEBUG_PRINT)
+    if debug_print:
+        print("TTS settings:")
+        print("rate:", settings.get("tts_rate"))
+        print("volume:", settings.get("tts_volume"))
+        print("voice:", settings.get("tts_voice"))
+    return tts.reinitialize_voice(
+        rate=settings.get("tts_rate"),
+        volume=settings.get("tts_volume"),
+        voice=settings.get("tts_voice"),
+    )
+reinitialize_with_settings()
 
 
 class TtsSpeakCommand(sublime_plugin.WindowCommand):
@@ -27,7 +46,18 @@ class TtsSpeakCommand(sublime_plugin.WindowCommand):
         sublime.run_command("tts_speak")
     """
     def run(self):
-        # view = self.view
+        # Get settings:
+        settings = sublime.load_settings(SETTINGS_NAME)
+        debug_print = settings.get("debug_print", DEBUG_PRINT)
+        replace_trivial_eol_newline = settings.get("replace_trivial_eol_newline")
+        regex_substitutions = settings.get("regex_substitutions")  # A list with <regex-pattern>, <substitute-text>
+        if debug_print: 
+            print("\nTTS Speak command invoked, settings are:")
+            print("  debug_print: ", debug_print)
+            print("  replace_trivial_eol_newline: ", replace_trivial_eol_newline)
+            print("  regex_substitutions: ", "".join("\n    - %s" % (tup,) for tup in regex_substitutions) if regex_substitutions else regex_substitutions)
+
+        # view = self.view  # for TextCommands, not WindowCommands
         view = self.window.active_view()
         text = "\n\n".join(view.substr(region) for region in view.sel())
         if not text:
@@ -35,10 +65,21 @@ class TtsSpeakCommand(sublime_plugin.WindowCommand):
         if not text:
             print("No text selected; no text in buffer.")
             return
-        if DEBUG_PRINT:
+        if replace_trivial_eol_newline:
+            trivial_eol_newline_regex = re.compile(r"\n(?=\w)")  # Newline not followed by another newline.
+            text, counts = trivial_eol_newline_regex.subn(" ", text)  # Replace trivial newlines in text with a space.
+            if debug_print:
+                print("Substituted %s trivial end-of-line newlines a space." % (counts, ))
+        if regex_substitutions:
+            for pattern, repl in regex_substitutions:
+                text, counts = re.subn(pattern, repl, text)
+                if debug_print:
+                    print("Substituted %s instances of pattern %r with string %r:" % (counts, pattern, repl))
+
+        if debug_print:
             print("tts.speak(<%s chars>) ..." % (len(text),), end="")
         ret = tts.speak(text)
-        if DEBUG_PRINT:
+        if debug_print:
             print(ret)
 
 
@@ -51,10 +92,12 @@ class TtsPauseCommand(sublime_plugin.WindowCommand):
         sublime.run_command("tts_pause")
     """
     def run(self):
-        if DEBUG_PRINT:
+        settings = sublime.load_settings(SETTINGS_NAME)
+        debug_print = settings.get("debug_print", DEBUG_PRINT)
+        if debug_print:
             print("tts.pause() ... ", end="")
         ret = tts.pause()
-        if DEBUG_PRINT:
+        if debug_print:
             print(ret)
 
 
@@ -67,10 +110,12 @@ class TtsResumeCommand(sublime_plugin.WindowCommand):
         sublime.run_command("tts_resume")
     """
     def run(self):
-        if DEBUG_PRINT:
+        settings = sublime.load_settings(SETTINGS_NAME)
+        debug_print = settings.get("debug_print", DEBUG_PRINT)
+        if debug_print:
             print("tts.resume() ... ", end="")
         ret = tts.resume()
-        if DEBUG_PRINT:
+        if debug_print:
             print(ret)
 
 
@@ -82,10 +127,12 @@ class TtsSkipCommand(sublime_plugin.WindowCommand):
         sublime.run_command("tts_skip")
     """
     def run(self, num_skip=1):
-        if DEBUG_PRINT:
+        settings = sublime.load_settings(SETTINGS_NAME)
+        debug_print = settings.get("debug_print", DEBUG_PRINT)
+        if debug_print:
             print("tts.skip(%s) ... " % (num_skip,), end="")
         ret = tts.skip(num_skip=num_skip)
-        if DEBUG_PRINT:
+        if debug_print:
             print(ret)
 
 
@@ -97,10 +144,12 @@ class TtsSkipAllCommand(sublime_plugin.WindowCommand):
         sublime.run_command("tts_skip_all")
     """
     def run(self):
-        if DEBUG_PRINT:
+        settings = sublime.load_settings(SETTINGS_NAME)
+        debug_print = settings.get("debug_print", DEBUG_PRINT)
+        if debug_print:
             print("tts.skip_all() ... ", end="")
         ret = tts.skip_all()
-        if DEBUG_PRINT:
+        if debug_print:
             print(ret)
 
 
@@ -112,8 +161,10 @@ class TtsReinitializeCommand(sublime_plugin.WindowCommand):
         sublime.run_command("tts_reinitialize")
     """
     def run(self):
-        if DEBUG_PRINT:
+        settings = sublime.load_settings(SETTINGS_NAME)
+        debug_print = settings.get("debug_print", DEBUG_PRINT)
+        if debug_print:
             print("tts.reinitialize_voice() ... ", end="")
-        ret = tts.reinitialize_voice()
-        if DEBUG_PRINT:
+        ret = reinitialize_with_settings()
+        if debug_print:
             print(ret)

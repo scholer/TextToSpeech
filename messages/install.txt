@@ -18,9 +18,8 @@ To speak text from within Sublime Text using TextToSpeech:
 6. If something goes wrong and the TTS engine starts misbehaving, you can use
 	`TTS: Reinitialize` to reset the TTS engine.
 
-
 If you would like to review the TextToSpeech usage instructions at a later time,
 just select `Preferences -> Package Settings -> TextToSpeech -> README` from the menu.
 
-The instructions also provide details on how to configure your Sublime Text "key bindings"
+The instructions also provide details on how to configure your Sublime Text key bindings
 so you can start/pause/resume/skip/stop TTS using keyboard shortcuts.

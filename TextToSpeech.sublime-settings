@@ -1,5 +1,9 @@
 // TextToSpeech default settings:
 // Copy items from here to your user-customized "Settings - User" file.
 {
-
+    "debug_print": false,
+    "replace_trivial_eol_newline": true,
+    "tts_rate": 1,
+    "tts_volume": 100,
+    "tts_voice": null,  // None means use default voice.
 }
